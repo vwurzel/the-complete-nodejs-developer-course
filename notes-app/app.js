@@ -1,5 +1,5 @@
-const { argv } = require('yargs')
 const yargs = require('yargs')
+const { addNote, listNotes, removeNote, readNote } = require('./notes')
 
 // Customize version
 yargs.version('0.0.1')
@@ -21,8 +21,7 @@ yargs.command({
         }
     },
     handler: function () {
-        console.log(`Title: ${argv.title}`)
-        console.log(`Body: ${argv.body}`)
+        addNote(yargs.argv.title, yargs.argv.body)
     }
 })
 
@@ -30,8 +29,15 @@ yargs.command({
 yargs.command({
     command: 'remove',
     describe: 'Removes one note',
+    builder: {
+        title: {
+            describe: 'Note title',
+            demandOption: true,
+            type: 'string'
+        }
+    },
     handler: function () {
-        console.log('removing the note')
+        removeNote(yargs.argv.title)
     }
 })
 
@@ -40,7 +46,7 @@ yargs.command({
     command: 'list',
     describe: 'List the notes',
     handler: function () {
-        console.log('listing notes')
+        listNotes()
     }
 })
 
@@ -48,9 +54,17 @@ yargs.command({
 yargs.command({
     command: 'read',
     describe: 'Read one note',
+    builder: {
+        title: {
+            describe: 'Note title',
+            demandOption: true,
+            type: 'string'
+        }
+    },
     handler: function () {
-        console.log('Reading a note')
+        readNote(yargs.argv.title)
     }
 })
+
 
 yargs.parse()
