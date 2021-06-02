@@ -3,14 +3,20 @@
 <html>
 
 <head>
+    <title>About</title>
+    <link rel="shortcut icon" href="/img/weather.png" type="image/x-icon">
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body>
-    {{>header}}
+    <div class="main-content">
+        {{>header}}
 
-    <p>{{text}}</p>
-    <img src="/img/me.jpeg" class="portrait">
+        <p>{{text}}</p>
+
+        <img src="/img/me.jpeg" class="portrait">
+    </div>
+
 
     {{>footer}}
 </body>

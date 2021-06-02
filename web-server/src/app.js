@@ -2,6 +2,9 @@ const path = require('path')
 const express = require('express')
 const hbs = require('hbs')
 
+const geoCode = require('./utils/geoCode')
+const forecast = require('./utils/forecast')
+
 const app = express()
 
 // Paths for express configs
@@ -40,10 +43,40 @@ app.get('/help', (req, res) => {
 })
 
 app.get('/weather', (req, res) => {
-    res.send({
-        location: 'Sao Leopoldo',
-        temp: 17
+    if (!req.query.location) {
+        return res.send({
+            success: false,
+            error: 'Please provide the location'
+        })
+    }
+    geoCode(req.query.location, (err, data) => {
+        if (err) {
+            return res.send({
+                success: false,
+                error: err
+            })
+        }
+        forecast(data.latitude, data.longitude, (err, forecastData) => {
+            if (err) {
+                return res.send({
+                    success: false,
+                    error: err
+                })
+            }
+            res.send({
+                success: true,
+                data: {
+                    location: data.location,
+                    temp: forecastData.current.temperature,
+                    desc: forecastData.current.weather_descriptions[0],
+                    wind: forecastData.current.wind_speed,
+                    icon: forecastData.current.weather_icons[0],
+                    feelsLike: forecastData.current.feelslike
+                }
+            })
+        })
     })
+
 })
 app.get('/help/*', (req, res) => {
     res.status(404).render('404', {
