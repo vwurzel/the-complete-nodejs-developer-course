@@ -4,6 +4,7 @@ const hbs = require('hbs')
 
 const geoCode = require('./utils/geoCode')
 const forecast = require('./utils/forecast')
+const { hostname } = require('os')
 
 const app = express()
 
