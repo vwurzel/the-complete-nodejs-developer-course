@@ -54,7 +54,7 @@ router.patch('/users/:id', async (req, res) => {
         }
         res.send(user)
     } catch (err) {
-        res.status(400).send(err)
+        res.status(500).send(err)
     }
 })
 router.delete('/users/:id', async (req, res) => {
