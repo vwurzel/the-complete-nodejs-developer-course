@@ -1,7 +1,7 @@
 require('./db/mongoose')
 const express = require('express')
 
-// Requiring routes files
+// Requiring route/middleware files
 const userRouter = require('./routers/user')
 const taskRouter = require('./routers/task')
 
