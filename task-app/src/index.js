@@ -7,7 +7,7 @@ const taskRouter = require('./routers/task')
 
 // Instancing and port variable
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT
 
 // Configuring to understand JSON
 app.use(express.json())
