@@ -1,20 +1,7 @@
-require('./db/mongoose')
-const express = require('express')
+const app = require('./app')
 
-// Requiring route/middleware files
-const userRouter = require('./routers/user')
-const taskRouter = require('./routers/task')
-
-// Instancing and port variable
-const app = express()
+// Setting port variable
 const port = process.env.PORT
-
-// Configuring to understand JSON
-app.use(express.json())
-
-// Setting routes
-app.use(userRouter)
-app.use(taskRouter)
 
 // Starting Server
 app.listen(port, () => {
