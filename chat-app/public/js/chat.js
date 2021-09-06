@@ -11,9 +11,29 @@ const messageDiv = document.querySelector('#messages')
 // Templates
 const messageTemplate = document.querySelector('#message-template').innerHTML
 const locationTemplate = document.querySelector('#location-template').innerHTML
+const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 
 // Option
 const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+
+// Setting autoscroll
+const autoscroll = () => {
+    const newMessage = messageDiv.lastElementChild
+
+    const newMessageStyles = getComputedStyle(newMessage)
+    const newMessageMargin = parseInt(newMessageStyles.marginBottom)
+    const newMessageHeight = newMessage.offsetHeight + newMessageMargin
+
+    const visibleHeight = messageDiv.offsetHeight
+
+    const containerHeight = messageDiv.scrollHeight
+
+    const scrollOffset = messageDiv.scrollTop + visibleHeight
+
+    if(containerHeight - newMessageHeight <= scrollOffset) {
+        messageDiv.scrollTop = messageDiv.scrollHeight
+    }
+}
 
 
 // Mesage display
@@ -21,9 +41,11 @@ socket.on('message', (message) => {
     console.log(message)
     const html = Mustache.render(messageTemplate, { 
         message: message.text,
-        createdAt: moment(message.createdAt).format('HH:mm:ss')
+        createdAt: moment(message.createdAt).format('HH:mm:ss'),
+        username: message.username
     })
     messageDiv.insertAdjacentHTML('beforeend', html)
+    autoscroll()
 })
 
 // Location display
@@ -31,9 +53,20 @@ socket.on('locationMessage', (location) => {
     console.log(location)
     const html = Mustache.render(locationTemplate, {
         location: location.url,
-        createdAt: moment(location.createdAt).format('HH:mm:ss')
+        createdAt: moment(location.createdAt).format('HH:mm:ss'),
+        username: location.username
     })
     messageDiv.insertAdjacentHTML('beforeend', html)
+    autoscroll()
+})
+
+// List users in room
+socket.on('roomData', ({ room, users }) => {
+    const html = Mustache.render(sidebarTemplate, {
+        room,
+        users
+    })
+    document.querySelector('#sidebar').innerHTML = html
 })
 
 // Mesage sender/Handler
